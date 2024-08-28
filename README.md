@@ -13,7 +13,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  apple_search_ads: ^0.0.1
+  apple_search_ads: ^0.0.2
 ```
 ## Usage
 
