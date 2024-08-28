@@ -1,0 +1,79 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:http/http.dart' as http;
+
+class AppleSearchAdsAuthenticator {
+  final String clientId;
+  final String teamId;
+  final String keyId;
+  final String keyContent;
+  final bool verbose;
+  String? accessToken;
+
+  AppleSearchAdsAuthenticator({
+    required this.clientId,
+    required this.teamId,
+    required this.keyId,
+    required this.keyContent,
+    this.verbose = false,
+  });
+
+  String generateClientSecret() {
+    const audience = "https://appleid.apple.com";
+    final issuedAtTimestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    final expirationTimestamp = issuedAtTimestamp + 86400 * 180;
+
+    final jwt = JWT(
+      {
+        "sub": clientId,
+        "aud": audience,
+        "iat": issuedAtTimestamp,
+        "exp": expirationTimestamp,
+        "iss": teamId,
+      },
+      header: {
+        "alg": "ES256",
+        "kid": keyId,
+      },
+    );
+
+    final clientSecret = jwt.sign(
+      ECPrivateKey(keyContent),
+      algorithm: JWTAlgorithm.ES256,
+    );
+
+    return clientSecret;
+  }
+
+  Future<String?> authenticate() async {
+    final clientSecret = generateClientSecret();
+
+    final response = await http.post(
+      Uri.parse("https://appleid.apple.com/auth/oauth2/token"),
+      headers: {
+        "Host": "appleid.apple.com",
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: {
+        "grant_type": "client_credentials",
+        "client_id": clientId,
+        "client_secret": clientSecret,
+        "scope": "searchadsorg",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final resultJson = jsonDecode(response.body);
+      if (verbose) {
+        log(resultJson.toString());
+      }
+      accessToken = resultJson["access_token"];
+      return accessToken;
+    } else {
+      log("Failed to authenticate: ${response.statusCode} ${response.body}");
+      return null;
+    }
+  }
+}
