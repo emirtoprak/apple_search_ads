@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:apple_search_ads/models/campaign_data.dart';
+import 'package:apple_search_ads/models/campaign_model.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:http/http.dart' as http;
 
@@ -75,5 +77,59 @@ class AppleSearchAdsAuthenticator {
       log("Failed to authenticate: ${response.statusCode} ${response.body}");
       return null;
     }
+  }
+
+  Future<CampaignData?> fetchData() async {
+    final authenticator = AppleSearchAdsAuthenticator(
+      clientId: clientId,
+      teamId: teamId,
+      keyId: keyId,
+      keyContent: keyContent,
+      verbose: true,
+    );
+
+    final accessToken = await authenticator.authenticate();
+
+    if (accessToken != null) {
+      final response = await http.get(
+        Uri.parse("https://api.searchads.apple.com/api/v5/campaigns"),
+        headers: {
+          "Authorization": "Bearer $accessToken",
+          "Content-Type": "application/json",
+          "X-AP-Context": "orgId=56920",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final campaignsData = jsonDecode(response.body);
+        CampaignData campaignData = CampaignData.fromJson(campaignsData);
+        return campaignData;
+      } else {
+        log("Error: ${response.statusCode} ${response.body}");
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  Future<List<CampaignModel>> findAllCampaigns(
+      {required String appName}) async {
+    final CampaignData? data = await fetchData();
+    if (data == null) {
+      return [];
+    }
+    List<CampaignModel> matchingCampaigns =
+        data.findAllCampaignsByName(appName);
+    return matchingCampaigns;
+  }
+
+  Future<CampaignModel> getCampaingById({required int id}) async {
+    final CampaignData? data = await fetchData();
+    if (data == null) {
+      throw Exception("Failed to fetch data");
+    }
+    final campaign = data.data.firstWhere((element) => element.id == id);
+    return campaign;
   }
 }

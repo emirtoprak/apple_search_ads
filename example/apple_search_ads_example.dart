@@ -16,6 +16,7 @@ Future<void> main() async {
   final accessToken = await authenticator.authenticate();
   if (accessToken != null) {
     print("Authenticated successfully with access token: $accessToken");
+    authenticator.fetchData();
   } else {
     print("Failed to authenticate");
   }
