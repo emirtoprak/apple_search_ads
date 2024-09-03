@@ -44,9 +44,7 @@ Example private key like this:
 
 ```vbnet
 -----BEGIN EC PRIVATE KEY-----
-MHcCAQEEIKtnxllRY8nbndBQwT9we4pEULtjpW605iwvzLlKcBq4oAoGCCqGSM49
-AwEHoUQDQgAEY58v74eQFyLtu5rtCpeU4NggVSUQSOcHhN744t0gWGc/xXkCSusz
-LaZriCQnnqq4Vx+IscLFcrjBj+ulZzKlUQ==
+ ---YOUR-PRIVATE-KEY----
 -----END EC PRIVATE KEY-----
 ```
 - **Important**: Always keep your private key secure and never share it. If your private key becomes compromised, you need to re-create a private key and client secret, and reupload it to your Apple Search Ads account.
