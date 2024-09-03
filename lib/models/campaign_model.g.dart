@@ -6,15 +6,18 @@ part of 'campaign_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CampaignModel _$CampaignFromJson(Map<String, dynamic> json) => CampaignModel(
+CampaignModel _$CampaignModelFromJson(Map<String, dynamic> json) =>
+    CampaignModel(
       id: (json['id'] as num).toInt(),
       orgId: (json['orgId'] as num).toInt(),
       name: json['name'] as String,
       budgetAmount: json['budgetAmount'] == null
           ? null
           : BudgetAmount.fromJson(json['budgetAmount'] as Map<String, dynamic>),
-      dailyBudgetAmount: DailyBudgetAmount.fromJson(
-          json['dailyBudgetAmount'] as Map<String, dynamic>),
+      dailyBudgetAmount: json['dailyBudgetAmount'] == null
+          ? null
+          : DailyBudgetAmount.fromJson(
+              json['dailyBudgetAmount'] as Map<String, dynamic>),
       adamId: (json['adamId'] as num).toInt(),
       paymentModel: json['paymentModel'] as String,
       locInvoiceDetails: json['locInvoiceDetails'],
@@ -43,7 +46,7 @@ CampaignModel _$CampaignFromJson(Map<String, dynamic> json) => CampaignModel(
       displayStatus: json['displayStatus'] as String,
     );
 
-Map<String, dynamic> _$CampaignToJson(CampaignModel instance) =>
+Map<String, dynamic> _$CampaignModelToJson(CampaignModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'orgId': instance.orgId,

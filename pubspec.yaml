@@ -1,6 +1,6 @@
 name: apple_search_ads
 description: A Dart package to interact with the Apple Search Ads API using OAuth 2.0 authentication.
-version: 0.0.3
+version: 0.0.5
 homepage:
 repository: https://github.com/emirtoprak/apple_search_ads
 issue_tracker: https://github.com/emirtoprak/apple_search_ads/issues

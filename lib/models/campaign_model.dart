@@ -2,7 +2,7 @@ import 'package:apple_search_ads/models/budget_amount.dart';
 import 'package:apple_search_ads/models/daily_budget_amount.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'campaign.g.dart';
+part 'campaign_model.g.dart';
 
 @JsonSerializable()
 class CampaignModel {
@@ -10,7 +10,7 @@ class CampaignModel {
   final int orgId;
   final String name;
   final BudgetAmount? budgetAmount;
-  final DailyBudgetAmount dailyBudgetAmount;
+  final DailyBudgetAmount? dailyBudgetAmount;
   final int adamId;
   final String paymentModel;
   final dynamic locInvoiceDetails;
@@ -36,7 +36,7 @@ class CampaignModel {
     required this.orgId,
     required this.name,
     this.budgetAmount,
-    required this.dailyBudgetAmount,
+    this.dailyBudgetAmount,
     required this.adamId,
     required this.paymentModel,
     this.locInvoiceDetails,
@@ -59,7 +59,7 @@ class CampaignModel {
   });
 
   factory CampaignModel.fromJson(Map<String, dynamic> json) =>
-      _$CampaignFromJson(json);
+      _$CampaignModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$CampaignToJson(this);
+  Map<String, dynamic> toJson() => _$CampaignModelToJson(this);
 }
