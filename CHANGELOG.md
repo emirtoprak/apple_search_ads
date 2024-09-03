@@ -5,3 +5,7 @@
 ## 0.0.2
 
 * Added license
+
+## 0.0.3
+
+* Added find campaing and change readme.md

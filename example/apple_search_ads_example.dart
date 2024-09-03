@@ -1,9 +1,11 @@
 import 'package:apple_search_ads/apple_search_ads.dart';
+import 'package:flutter/material.dart';
 
 Future<void> main() async {
   final authenticator = AppleSearchAdsAuthenticator(
     clientId: "YOUR-CLIENT",
     teamId: "YOUR-TEAM-ID",
+    orgId: "YOUR-ORG-ID",
     keyId: "YOUR-KEY-ID",
     keyContent: """
       -----BEGIN EC PRIVATE KEY-----
@@ -15,8 +17,9 @@ Future<void> main() async {
 
   final accessToken = await authenticator.authenticate();
   if (accessToken != null) {
-    print("Authenticated successfully with access token: $accessToken");
+    debugPrint("Authenticated successfully with access token: $accessToken");
+    authenticator.fetchData();
   } else {
-    print("Failed to authenticate");
+    debugPrint("Failed to authenticate");
   }
 }
