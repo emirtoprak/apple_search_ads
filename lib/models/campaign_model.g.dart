@@ -44,6 +44,7 @@ CampaignModel _$CampaignModelFromJson(Map<String, dynamic> json) =>
       adChannelType: json['adChannelType'] as String,
       billingEvent: json['billingEvent'] as String,
       displayStatus: json['displayStatus'] as String,
+      conversionType: json['conversionType'] as String?,
     );
 
 Map<String, dynamic> _$CampaignModelToJson(CampaignModel instance) =>
@@ -73,4 +74,5 @@ Map<String, dynamic> _$CampaignModelToJson(CampaignModel instance) =>
       'adChannelType': instance.adChannelType,
       'billingEvent': instance.billingEvent,
       'displayStatus': instance.displayStatus,
+      'conversionType': instance.conversionType,
     };

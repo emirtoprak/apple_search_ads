@@ -13,6 +13,7 @@ dependencies:
   dart_jsonwebtoken: ^2.14.0
   flutter:
     sdk: flutter
+  flutter_asa_attribution: ^0.0.3
   http: ^1.2.2
   json_annotation: ^4.9.0
 

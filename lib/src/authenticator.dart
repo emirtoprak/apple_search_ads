@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:apple_search_ads/models/campaign_data.dart';
 import 'package:apple_search_ads/models/campaign_model.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
+import 'package:flutter_asa_attribution/flutter_asa_attribution.dart';
 import 'package:http/http.dart' as http;
 
 class AppleSearchAdsAuthenticator {
@@ -25,6 +27,7 @@ class AppleSearchAdsAuthenticator {
   });
 
   String generateClientSecret() {
+    if (Platform.isAndroid) return "";
     const audience = "https://appleid.apple.com";
     final issuedAtTimestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     final expirationTimestamp = issuedAtTimestamp + 86400 * 180;
@@ -52,6 +55,7 @@ class AppleSearchAdsAuthenticator {
   }
 
   Future<String?> authenticate() async {
+    if (Platform.isAndroid) return null;
     final clientSecret = generateClientSecret();
 
     final response = await http.post(
@@ -82,6 +86,7 @@ class AppleSearchAdsAuthenticator {
   }
 
   Future<CampaignData?> fetchData() async {
+    if (Platform.isAndroid) return null;
     final authenticator = AppleSearchAdsAuthenticator(
       clientId: clientId,
       teamId: teamId,
@@ -102,10 +107,14 @@ class AppleSearchAdsAuthenticator {
           "X-AP-Context": "orgId=$orgId",
         },
       );
+      String? conversionType = await getConversionType();
 
       if (response.statusCode == 200) {
         final campaignsData = jsonDecode(response.body);
         CampaignData campaignData = CampaignData.fromJson(campaignsData);
+        for (var element in campaignData.data) {
+          element.conversionType = conversionType;
+        }
         return campaignData;
       } else {
         log("Error: ${response.statusCode} ${response.body}");
@@ -116,18 +125,42 @@ class AppleSearchAdsAuthenticator {
     }
   }
 
+  Future<String?> getConversionType() async {
+    if (Platform.isAndroid) return null;
+    String? conversionType;
+
+    final token = await FlutterAsaAttribution.instance.attributionToken();
+
+    if (token == null) conversionType = null;
+
+    final datas =
+        await FlutterAsaAttribution.instance.requestAttributionDetails();
+
+    if (datas != null && datas.isNotEmpty) {
+      conversionType = datas["conversionType"];
+    }
+    return conversionType;
+  }
+
   Future<List<CampaignModel>> findAllCampaigns(
       {required String appName}) async {
+    if (Platform.isAndroid) return [];
+
     final CampaignData? data = await fetchData();
     if (data == null) {
       return [];
     }
     List<CampaignModel> matchingCampaigns =
         data.findAllCampaignsByName(appName);
+    String? conversionType = await getConversionType();
+    for (var element in matchingCampaigns) {
+      element.conversionType = conversionType;
+    }
     return matchingCampaigns;
   }
 
   Future<CampaignModel?> getCampaingById({required int id}) async {
+    if (Platform.isAndroid) return null;
     const String red = '\x1B[31m';
     try {
       final CampaignData? data = await fetchData();
@@ -139,6 +172,8 @@ class AppleSearchAdsAuthenticator {
         log("Campaign with id $id not found");
         throw Exception("Campaign with id $id not found");
       });
+      String? conversionType = await getConversionType();
+      campaign.conversionType = conversionType;
       return campaign;
     } on Exception catch (e) {
       log(
@@ -147,5 +182,22 @@ class AppleSearchAdsAuthenticator {
       );
     }
     return null;
+  }
+
+  Future<CampaignData?> getEnabledCampaign() async {
+    if (Platform.isAndroid) return null;
+    CampaignData? data = await fetchData();
+    if (data == null) {
+      return null;
+    }
+    List<CampaignModel> resultCampaign = [];
+    for (var element in data.data) {
+      if (element.status == 'ENABLED') {
+        resultCampaign.add(element);
+      }
+    }
+    return resultCampaign.isNotEmpty
+        ? CampaignData(data: resultCampaign, pagination: data.pagination)
+        : null;
   }
 }
