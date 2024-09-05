@@ -1,5 +1,4 @@
-import 'package:apple_search_ads/models/budget_amount.dart';
-import 'package:apple_search_ads/models/daily_budget_amount.dart';
+import 'package:apple_search_ads/apple_search_ads.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'campaign_model.g.dart';
@@ -30,6 +29,7 @@ class CampaignModel {
   final String adChannelType;
   final String billingEvent;
   final String displayStatus;
+  String? conversionType;
 
   CampaignModel({
     required this.id,
@@ -56,6 +56,7 @@ class CampaignModel {
     required this.adChannelType,
     required this.billingEvent,
     required this.displayStatus,
+    this.conversionType,
   });
 
   factory CampaignModel.fromJson(Map<String, dynamic> json) =>
