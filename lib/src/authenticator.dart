@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:apple_search_ads/models/campaign_data.dart';
 import 'package:apple_search_ads/models/campaign_model.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
-import 'package:flutter_asa_attribution/flutter_asa_attribution.dart';
+// import 'package:flutter_asa_attribution/flutter_asa_attribution.dart';
 import 'package:http/http.dart' as http;
 
 class AppleSearchAdsAuthenticator {
@@ -107,14 +107,14 @@ class AppleSearchAdsAuthenticator {
           "X-AP-Context": "orgId=$orgId",
         },
       );
-      String? conversionType = await getConversionType();
+      // String? conversionType = await getConversionType();
 
       if (response.statusCode == 200) {
         final campaignsData = jsonDecode(response.body);
         CampaignData campaignData = CampaignData.fromJson(campaignsData);
-        for (var element in campaignData.data) {
-          element.conversionType = conversionType;
-        }
+        // for (var element in campaignData.data) {
+        //   element.conversionType = conversionType;
+        // }
         return campaignData;
       } else {
         log("Error: ${response.statusCode} ${response.body}");
@@ -125,22 +125,22 @@ class AppleSearchAdsAuthenticator {
     }
   }
 
-  Future<String?> getConversionType() async {
-    if (Platform.isAndroid) return null;
-    String? conversionType;
+  // Future<String?> getConversionType() async {
+  //   if (Platform.isAndroid) return null;
+  //   String? conversionType;
 
-    final token = await FlutterAsaAttribution.instance.attributionToken();
+  //   final token = await FlutterAsaAttribution.instance.attributionToken();
 
-    if (token == null) conversionType = null;
+  //   if (token == null) conversionType = null;
 
-    final datas =
-        await FlutterAsaAttribution.instance.requestAttributionDetails();
+  //   final datas =
+  //       await FlutterAsaAttribution.instance.requestAttributionDetails();
 
-    if (datas != null && datas.isNotEmpty) {
-      conversionType = datas["conversionType"];
-    }
-    return conversionType;
-  }
+  //   if (datas != null && datas.isNotEmpty) {
+  //     conversionType = datas["conversionType"];
+  //   }
+  //   return conversionType;
+  // }
 
   Future<List<CampaignModel>> findAllCampaigns(
       {required String appName}) async {
@@ -152,10 +152,10 @@ class AppleSearchAdsAuthenticator {
     }
     List<CampaignModel> matchingCampaigns =
         data.findAllCampaignsByName(appName);
-    String? conversionType = await getConversionType();
-    for (var element in matchingCampaigns) {
-      element.conversionType = conversionType;
-    }
+    // String? conversionType = await getConversionType();
+    // for (var element in matchingCampaigns) {
+    //   element.conversionType = conversionType;
+    // }
     return matchingCampaigns;
   }
 
@@ -172,8 +172,8 @@ class AppleSearchAdsAuthenticator {
         log("Campaign with id $id not found");
         throw Exception("Campaign with id $id not found");
       });
-      String? conversionType = await getConversionType();
-      campaign.conversionType = conversionType;
+      // String? conversionType = await getConversionType();
+      // campaign.conversionType = conversionType;
       return campaign;
     } on Exception catch (e) {
       log(

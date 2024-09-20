@@ -13,7 +13,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  apple_search_ads: ^0.0.6
+  apple_search_ads: ^0.0.7
 ```
 
 # Apple Search Ads API - Private and Public Key Generation

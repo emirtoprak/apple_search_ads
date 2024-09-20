@@ -21,3 +21,7 @@
 ## 0.0.6
 
 * Added conversionType
+
+## 0.0.7
+
+* Deleted conversionType
