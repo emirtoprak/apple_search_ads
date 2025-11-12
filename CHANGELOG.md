@@ -21,3 +21,11 @@
 ## 0.0.6
 
 * Added conversionType
+
+## 0.0.7
+
+* bug-fix
+
+## 0.0.8
+
+* Updated dart_jsonwebtoken package
