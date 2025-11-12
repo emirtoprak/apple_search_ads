@@ -29,3 +29,7 @@
 ## 0.0.8
 
 * Updated dart_jsonwebtoken package
+
+## 0.0.9
+
+* Updated flutter_asa_attribution package
