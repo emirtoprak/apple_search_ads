@@ -4,8 +4,8 @@ import 'dart:io';
 
 import 'package:apple_search_ads/models/campaign_data.dart';
 import 'package:apple_search_ads/models/campaign_model.dart';
+import 'package:apple_search_ads/src/flutter_asa_attribution.dart';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
-import 'package:flutter_asa_attribution/flutter_asa_attribution.dart';
 import 'package:http/http.dart' as http;
 
 class AppleSearchAdsAuthenticator {

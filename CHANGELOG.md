@@ -33,3 +33,7 @@
 ## 0.0.9
 
 * Updated flutter_asa_attribution package
+
+## 1.0.0
+
+* Updated flutter_asa_attribution package and just working on ios
